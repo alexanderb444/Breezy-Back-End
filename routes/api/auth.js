@@ -1,18 +1,33 @@
 const express = require('express')
 const router = express.Router()
+const auth = require('../../middleware/auth')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const config = require('config')
+const jwt = require('jsonwebtoken')
 const {check, validationResult} = require('express-validator/check')
 
 const User = require('../../models/User')
+
+//route     POST api/auth
+// @desc    Authenticate user and get token
+// @access  public
+router.get('/', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password')
+        res.json(user)
+    } catch(err) {
+        console.error(err.message)
+        res.status(500).send('Server Error')
+
+    }
+})
 
 //route     GET api/users
 // @desc    register user
 // @access  public
 router.post('/', [
     check('email', 'Valid Email Required').isEmail(),
-    check('password', 'Password needs more then 6 characters').isLength({min: 6})
+    check('password', 'Password is required').exists()
 ],
 async (req, res) => {
     const errors = validationResult(req)
@@ -27,23 +42,15 @@ async (req, res) => {
     //see if user exists
     let user = await User.findOne({ email })
 
-    if(user) {
-        return res.status(400).json({ errors: [{msg: 'User already exists'}] })
+    if(!user) {
+        return res.status(400).json({ errors: [{msg: 'Invalid Credentials'}] })
     }
 
-    user = new User({
-        email,
-        password
-    })
-    //Encrypt password
+    const isMatch = await bcrypt.compare(password, user.password)
 
-    const salt = await bcrypt.genSalt(10)
-
-    user.password = await bcrypt.hash(password, salt)
-
-    await user.save()
-
-    //Return jsonwebtoken
+    if (!isMatch) {
+        return res.status(400).json({ errors: [{msg: 'Invalid Credentials'}] })
+    }
 
     const payload = {
         user: {
@@ -66,7 +73,6 @@ async (req, res) => {
     console.error(err.message)
     res.status(500).send('Server Error')
     }
-
-    
 })
+
 module.exports = router;
