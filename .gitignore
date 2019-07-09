@@ -1,2 +1,4 @@
 node_modules/
 config/
+now.json
+package-lock.json
