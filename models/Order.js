@@ -12,28 +12,6 @@ const OrderSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    clothes: [
-        {
-            trousers: {
-                type: Number
-            },
-            Jacket: {
-                type: Number
-            },
-            Dress: {
-                type: Number
-            },
-            Skirt: {
-                type: Number
-            },
-            Blouse: {
-                type: Number
-            },
-            Mens_shirt: {
-                type: Number
-            }        
-        }
-    ],
     date: {
         type: Date,
         default: Date.now
