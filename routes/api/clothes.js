@@ -43,8 +43,14 @@ async (req, res) => {
     
 })
 
-// router.post('/',  (req, res)=> {
-//     res.send("post req");
-// });
+router.get('/', async (req,res) => {
+    try {
+        const clothesarray = await Clothes.find()
+        res.json(clothesarray)
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).json({msg: "server error"})
+    }
+})
 
 module.exports = router;

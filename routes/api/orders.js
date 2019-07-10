@@ -5,7 +5,7 @@ const {check, validationResult} = require('express-validator/check')
 const request = require('request')
 const config = require('config')
 
-const Profile = require('../../models/Profile')
+const Order = require('../../models/Order')
 const User = require('../../models/User')
 
 //route     GET api/profile/me
@@ -29,11 +29,7 @@ router.get('/me', auth, async (req, res) => {
 //route     Post api/profile
 // @desc    Create ir update user profile
 // @access  Private
-router.post('/', [ auth, [
-    check('dob', 'dob is required').not().isEmpty(), 
-    check('creditcard', 'creditcard is required').not().isEmpty()
-    ]
-],
+router.post('/', [ auth, ],
 async (req, res) => {
     const errors = validationResult(req)
     if(!errors.isEmpty()) {
@@ -41,27 +37,21 @@ async (req, res) => {
     }
 
     const {
-        creditcard,
-        dob
+        price,
+        location
     } = req.body
 
     //build profile object
     const profileFields = {}
     profileFields.user = req.user.id
-    if(creditcard) profileFields.creditcard = creditcard
-    if(dob) profileFields.dob = dob
+    if(price) profileFields.price = price
+    if(location) profileFields.location = location
 
     try {
         let profile = await Profile.findOne({user: req.user.id})
 
-        if(profile) {
-            //Update
-            profile = await Profile.findOneAndUpdate({user: req.user.id}, {$set: profileFields}, {new: true})
-            return res.json(profile)
-        }
-
         //create
-        profile = new Profile(profileFields)
+        profile = new Order(profileFields)
 
         await profile.save()
         res.json(profile)
@@ -80,25 +70,6 @@ router.get('/', async (req,res) => {
     try {
         const profiles = await Profile.find().populate('user')
         res.json(profiles)
-    } catch (err) {
-        console.error(err.message)
-        res.status(500).json({msg: "server error"})
-    }
-})
-
-//route     GET api/profile/admin
-// @desc    get all admin profiles
-// @access  Public
-
-router.get('/admins', async (req,res) => {
-    try {
-        const profiles = await Profile.find().populate('user')
-        admin = await profiles.map((item) => {
-            if (!item.user.account) {
-            return null
-            }
-            return res.json(item)
-        })
     } catch (err) {
         console.error(err.message)
         res.status(500).json({msg: "server error"})
