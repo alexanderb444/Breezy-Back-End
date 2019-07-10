@@ -93,12 +93,23 @@ router.get('/', async (req,res) => {
 router.get('/admins', async (req,res) => {
     try {
         const profiles = await Profile.find().populate('user')
-        admin = await profiles.map((item) => {
-            if (!item.user.account) {
-            return null
-            }
-            return res.json(item)
-        })
+         const result = profiles.filter(item => item.user.account === true);
+        return res.json(result)
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).json({msg: "server error"})
+    }
+})
+
+//route     GET api/profile/users
+// @desc    get all user profiles
+// @access  Public
+
+router.get('/users', async (req,res) => {
+    try {
+        const profiles = await Profile.find().populate('user')
+         const result = profiles.filter(item => item.user.account === false);
+        return res.json(result)
     } catch (err) {
         console.error(err.message)
         res.status(500).json({msg: "server error"})
