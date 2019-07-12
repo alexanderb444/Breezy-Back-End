@@ -1,4 +1,6 @@
 node_modules/
 config/
+Breezy-Front-End/
 now.json
 package-lock.json
+

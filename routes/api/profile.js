@@ -14,7 +14,7 @@ const User = require('../../models/User')
 router.get('/me', auth, async (req, res) => {
     try {
         const profile = await Profile.findOne({ user: req.user.id}).populate('user')
-
+        // console.log(profile)
         if(!profile) {
             return res.status(400).json({msg: 'There is no profile for this user'})
         }
@@ -89,30 +89,40 @@ router.get('/', async (req,res) => {
 //route     GET api/profile/admin
 // @desc    get all admin profiles
 // @access  Public
+// PROTTECT THIS ONE
 
-router.get('/admins', async (req,res) => {
+router.get('/admins', auth, async (req,res) => {
     try {
+        const profile = await Profile.findOne({ user: req.user.id}).populate('user')
         const profiles = await Profile.find().populate('user')
-         const result = profiles.filter(item => item.user.account === true);
-        return res.json(result)
+        const result = profiles.filter(item => item.user.account === true);
+        if(profile.user.account === true) {
+            return res.json(result)
+        }
+        res.status(500).json({msg: "You are not authorized"})
     } catch (err) {
         console.error(err.message)
-        res.status(500).json({msg: "server error"})
+        res.status(500).json({msg: "You are not authorized"})
     }
 })
 
 //route     GET api/profile/users
 // @desc    get all user profiles
 // @access  Public
+// PROTECT this one too
 
-router.get('/users', async (req,res) => {
+router.get('/users', auth, async (req,res) => {
     try {
-        const profiles = await Profile.find().populate('user')
+         const profile = await Profile.findOne({ user: req.user.id}).populate('user')
+         const profiles = await Profile.find().populate('user')
          const result = profiles.filter(item => item.user.account === false);
+         if (profile.user.account == true) {
         return res.json(result)
+         } 
+         res.status(500).json({msg: "You are not authorized"})
     } catch (err) {
         console.error(err.message)
-        res.status(500).json({msg: "server error"})
+        res.status(500).json({msg: "You are not authorized"})
     }
 })
 
@@ -144,7 +154,6 @@ router.get('/user/:user_id', async (req,res) => {
 
 router.delete('/', auth, async (req,res) => {
     try {
-        //@todo remove user posts
 
         //remove profile
         await Profile.findOneAndRemove({ user: req.user.id})
