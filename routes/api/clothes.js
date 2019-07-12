@@ -19,7 +19,8 @@ async (req, res) => {
 
     const {
         name,
-        price
+        price,
+        quanity
     } = req.body
 
     console.log(name,price)
@@ -27,7 +28,8 @@ async (req, res) => {
 
     clothes = new Clothes({
         name,
-        price
+        price,
+        quanity
     })
 
     await clothes.save()
