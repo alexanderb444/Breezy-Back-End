@@ -26,8 +26,8 @@ router.get('/me', auth, async (req, res) => {
     }
 })
 
-//route     Post api/profile
-// @desc    Create ir update user profile
+//route     Post api/orders
+// @desc    Create order
 // @access  Private
 router.post('/', [ auth, ],
 async (req, res) => {
@@ -38,7 +38,8 @@ async (req, res) => {
 
     const {
         price,
-        location
+        location,
+        clothes
     } = req.body
 
     //build profile object
@@ -46,7 +47,8 @@ async (req, res) => {
     profileFields.user = req.user.id
     if(price) profileFields.price = price
     if(location) profileFields.location = location
-
+    if(clothes) profileFields.clothes = clothes
+    console.log(profileFields)
     try {
         let profile = await Profile.findOne({user: req.user.id})
 
@@ -68,7 +70,7 @@ async (req, res) => {
 
 router.get('/', async (req,res) => {
     try {
-        const profiles = await Profile.find().populate('user')
+        const profiles = await Order.find().populate('user')
         res.json(profiles)
     } catch (err) {
         console.error(err.message)
