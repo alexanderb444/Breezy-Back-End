@@ -33,7 +33,7 @@ async (req, res) => {
 
     user = new User({
         email,
-        password
+        password,
     })
     //Encrypt password
 
