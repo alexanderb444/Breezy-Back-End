@@ -66,7 +66,21 @@ async (req, res) => {
     console.error(err.message)
     res.status(500).send('Server Error')
     }
+// To delete an account
 
-    
+router.delete('/', auth, async (req,res) => {
+    try {
+
+        //remove profile
+        await Profile.findOneAndRemove({ user: req.user.id})
+        //remove user
+        await User.findOneAndRemove({ _id: req.user.id})
+
+        res.json({msg: 'User removed'})
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).json({msg: "server error"})
+    }
+})
 })
 module.exports = router;
