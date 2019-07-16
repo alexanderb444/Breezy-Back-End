@@ -66,7 +66,16 @@ async (req, res) => {
     console.error(err.message)
     res.status(500).send('Server Error')
     }
+// To delete an account
 
-    
+// router.delete('/', (req, res, next) => {
+//     User.deleteOne({ _id: new ObjectId(req.params.id)}, (err, result) => {
+//         if (err){
+//             throw err;
+//         }
+//         res.send(result)
+//     })
+// })
+
 })
 module.exports = router;
