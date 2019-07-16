@@ -31,8 +31,7 @@ router.get('/me', auth, async (req, res) => {
 // @access  Private
 router.post('/', [ auth, [
     check('dob', 'dob is required').not().isEmpty(), 
-    check('creditcard', 'creditcard is required').not().isEmpty(),
-    check('fullname', 'fullname is required').not().isEmpty()
+    check('creditcard', 'creditcard is required').not().isEmpty()
     ]
 ],
 async (req, res) => {
@@ -43,8 +42,7 @@ async (req, res) => {
 
     const {
         creditcard,
-        dob,
-        fullname
+        dob
     } = req.body
 
     //build profile object
@@ -52,7 +50,6 @@ async (req, res) => {
     profileFields.user = req.user.id
     if(creditcard) profileFields.creditcard = creditcard
     if(dob) profileFields.dob = dob
-    if(fullname) profileFields.fullname = fullname
 
     try {
         let profile = await Profile.findOne({user: req.user.id})
@@ -94,15 +91,12 @@ router.get('/', async (req,res) => {
 // @access  Public
 // PROTTECT THIS ONE
 
-router.get('/admins', auth, async (req,res) => {
+router.get('/admins', async (req,res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id}).populate('user')
+        // const profile = await Profile.findOne({ user: req.user.id}).populate('user')
         const profiles = await Profile.find().populate('user')
         const result = profiles.filter(item => item.user.account === true);
-        if(profile.user.account === true) {
-            return res.json(result)
-        }
-        res.status(500).json({msg: "You are not authorized"})
+        return res.json(result)
     } catch (err) {
         console.error(err.message)
         res.status(500).json({msg: "You are not authorized"})
@@ -114,15 +108,13 @@ router.get('/admins', auth, async (req,res) => {
 // @access  Public
 // PROTECT this one too
 
-router.get('/users', auth, async (req,res) => {
+router.get('/users', async (req,res) => {
     try {
-         const profile = await Profile.findOne({ user: req.user.id}).populate('user')
+        //  const profile = await Profile.findOne({ user: req.user.id}).populate('user')
          const profiles = await Profile.find().populate('user')
          const result = profiles.filter(item => item.user.account === false);
-         if (profile.user.account == true) {
         return res.json(result)
-         } 
-         res.status(500).json({msg: "You are not authorized"})
+        
     } catch (err) {
         console.error(err.message)
         res.status(500).json({msg: "You are not authorized"})

@@ -68,14 +68,19 @@ async (req, res) => {
     }
 // To delete an account
 
-// router.delete('/', (req, res, next) => {
-//     User.deleteOne({ _id: new ObjectId(req.params.id)}, (err, result) => {
-//         if (err){
-//             throw err;
-//         }
-//         res.send(result)
-//     })
-// })
+router.delete('/', auth, async (req,res) => {
+    try {
 
+        //remove profile
+        await Profile.findOneAndRemove({ user: req.user.id})
+        //remove user
+        await User.findOneAndRemove({ _id: req.user.id})
+
+        res.json({msg: 'User removed'})
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).json({msg: "server error"})
+    }
+})
 })
 module.exports = router;
