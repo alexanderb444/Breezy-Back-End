@@ -17,8 +17,8 @@ const OrderSchema = new mongoose.Schema({
         default: Date.now
     },
     clothes: [
-        { 
-            type: mongoose.Schema.Types.ObjectId, ref: 'clothes' 
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'clothes'
         }
     ]
 });
