@@ -121,6 +121,22 @@ router.get('/users', async (req,res) => {
     }
 })
 
+//route     GET api/profile/usersall
+// @desc    get all user profiles
+// @access  Public
+// PROTECT this one too
+router.get('/usersall', async (req,res) => {
+    try {
+        //  const profile = await Profile.findOne({ user: req.user.id}).populate('user')
+         const profiles = await Profile.find().populate('user')
+        return res.json(profiles)
+        
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).json({msg: "You are not authorized"})
+    }
+})
+
 //route     GET api/profile/user/:user_id
 // @desc    Get profile by user ID
 // @access  Public
