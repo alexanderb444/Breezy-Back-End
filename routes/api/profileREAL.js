@@ -91,12 +91,15 @@ router.get('/', async (req,res) => {
 // @access  Public
 // PROTTECT THIS ONE
 
-router.get('/admins', async (req,res) => {
+router.get('/admins', auth, async (req,res) => {
     try {
-        // const profile = await Profile.findOne({ user: req.user.id}).populate('user')
+        const profile = await Profile.findOne({ user: req.user.id}).populate('user')
         const profiles = await Profile.find().populate('user')
         const result = profiles.filter(item => item.user.account === true);
-        return res.json(result)
+        if(profile.user.account === true) {
+            return res.json(result)
+        }
+        res.status(500).json({msg: "You are not authorized"})
     } catch (err) {
         console.error(err.message)
         res.status(500).json({msg: "You are not authorized"})
@@ -108,29 +111,15 @@ router.get('/admins', async (req,res) => {
 // @access  Public
 // PROTECT this one too
 
-router.get('/users', async (req,res) => {
+router.get('/users', auth, async (req,res) => {
     try {
-        //  const profile = await Profile.findOne({ user: req.user.id}).populate('user')
+         const profile = await Profile.findOne({ user: req.user.id}).populate('user')
          const profiles = await Profile.find().populate('user')
          const result = profiles.filter(item => item.user.account === false);
+         if (profile.user.account == true) {
         return res.json(result)
-        
-    } catch (err) {
-        console.error(err.message)
-        res.status(500).json({msg: "You are not authorized"})
-    }
-})
-
-//route     GET api/profile/usersall
-// @desc    get all user profiles
-// @access  Public
-// PROTECT this one too
-router.get('/usersall', async (req,res) => {
-    try {
-        //  const profile = await Profile.findOne({ user: req.user.id}).populate('user')
-         const profiles = await Profile.find().populate('user')
-        return res.json(profiles)
-        
+         } 
+         res.status(500).json({msg: "You are not authorized"})
     } catch (err) {
         console.error(err.message)
         res.status(500).json({msg: "You are not authorized"})
