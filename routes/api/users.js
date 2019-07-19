@@ -68,7 +68,7 @@ async (req, res) => {
     }
 // To delete an account
 
-router.delete('/', auth, async (req,res) => {
+router.delete('/', async (req,res) => {
     try {
 
         //remove profile
