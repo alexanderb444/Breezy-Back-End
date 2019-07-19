@@ -7,6 +7,10 @@ const ProfileSchema = new mongoose.Schema({
     fullname: {
         type: String
     },
+    address: {
+        type: String,
+        require: true
+    },
     creditcard: {
         type: String,
         required: true
