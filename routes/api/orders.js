@@ -13,7 +13,7 @@ const User = require('../../models/User')
 // @access  Private
 router.get('/me', auth, async (req, res) => {
     try {
-        const profile = await Profile.findOne({ user: req.user.id}).populate('user')
+        const profile = await Order.find({ user: req.user.id}).populate('user')
 
         if(!profile) {
             return res.status(400).json({msg: 'There is no profile for this user'})
