@@ -33,7 +33,6 @@ router.post('/', [ auth, [
     check('dob', 'dob is required').not().isEmpty(), 
     check('creditcard', 'creditcard is required').not().isEmpty(),
     check('fullname', 'fullname is required').not().isEmpty(),
-    check('address', 'address is required').not().isEmpty()
     ]
 ],
 async (req, res) => {
@@ -45,8 +44,7 @@ async (req, res) => {
     const {
         creditcard,
         dob,
-        fullname,
-        address
+        fullname
     } = req.body
 
     //build profile object
@@ -55,7 +53,6 @@ async (req, res) => {
     if(creditcard) profileFields.creditcard = creditcard
     if(dob) profileFields.dob = dob
     if(fullname) profileFields.fullname = fullname
-    if(address) profileFields.address = address
     
 
     try {

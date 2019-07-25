@@ -1,7 +1,7 @@
 const mailgunLoader = require('mailgun-js')
-const config = require('config')
-const apikey1 = config.get('apikey')
-const domain1 = config.get('domain')
+// const config = require('config')
+const apikey1 = process.env.apikey
+const domain1 = process.env.domain
 
 let mailgun = mailgunLoader({
     apiKey: apikey1,

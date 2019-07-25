@@ -3,4 +3,4 @@ config/
 Breezy-Front-End/
 now.json
 package-lock.json
-
+.env
