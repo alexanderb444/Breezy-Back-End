@@ -21,7 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "mailgun": "^0.5.0",
     "mailgun-js": "^0.22.0",
-    "mongoose": "^5.6.3",
+    "mongoose": "^5.7.5",
     "request": "^2.88.0"
   },
   "devDependencies": {
